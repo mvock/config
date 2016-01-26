@@ -1,3 +1,4 @@
+#!/bin/bash
 ### zsh ###
 ln -s ~/.florres/.zshrc ~/.zshrc
 mkdir ~/.zsh
