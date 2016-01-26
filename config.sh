@@ -12,3 +12,9 @@ git clone https://github.com/VundleVim/Vundle.vim.git ~/.florres/vimfiles/bundle
 
 ### gvim ###
 ln -s ~/.florres/.gvimrc ~/.gvimrc
+cat << EOF
+************************************
+** To finish installation execute **
+** :PluginInstall                 **
+** in vim                         **
+************************************
