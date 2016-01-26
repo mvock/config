@@ -22,3 +22,6 @@ antigen bundle zsh-users/zsh-syntax-highlighting
 antigen theme bureau
 
 antigen apply
+
+source .bash_aliases
+source .bash_scripts
