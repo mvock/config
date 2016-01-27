@@ -1,0 +1,22 @@
+Config { font = "xft:Source\ Code\ Pro\ Semibold:pixelsize=14"
+       , bgColor = "black"
+       , fgColor = "grey"
+       , position = TopP 94 0
+       , commands = [
+         Run Cpu ["-L","3","-H","50","--normal","green","--high","red"] 10
+         , Run Memory ["-t","Mem: <usedratio>%"] 10
+         , Run Swap [] 10
+         , Run Date "%a %b %_d %l:%M" "date" 10
+         , Run BatteryP ["BAT0"]
+                        ["-t", "<acstatus><watts> (<left>%)",
+                         "-L", "10", "-H", "80", "-p", "3",
+                         "--", "-O", "<fc=green>On</fc> - ", "-o", "",
+                         "-L", "-15", "-H", "-5",
+                         "-l", "red", "-m", "blue", "-h", "green"]
+                         600
+         , Run StdinReader
+         ]
+       , sepChar = "%"
+       , alignSep = "}{"
+       , template = "| %StdinReader% }{ %battery% | %cpu% | %memory% * %swap%    <fc=#ee9a00>%date%</fc> "
+       }
