@@ -5,3 +5,4 @@ Linux configurations
 * mv structure to .conf
 * add delete script
 * add ls aliases
+* evaluate jinja -> templates for gitconfig
