@@ -1,0 +1,18 @@
+URxvt.font: xft:Source Code Pro:pixelsize=13
+
+URxvt.foreground: lightgray
+URxvt.background: black
+
+URxvt.transparent: true
+URxvt.shading: 30
+URxvt.tintColour: black
+
+URxvt.fading: 20
+URxvt.fadeColor: [0]black
+
+URxvt.saveLines:32767
+URxvt.scrollBar: false
+
+URxvt.urgentOnBell: true
+
+xdvi.editor: gvim --remote
