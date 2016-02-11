@@ -2,11 +2,14 @@ import XMonad
 import Data.Monoid
 import Control.Monad
 import System.Exit
+import System.IO
+
 import Control.Monad.Writer
 import Graphics.X11.ExtraTypes.XorgDefault
 
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
+
 import XMonad.Util.Run
 import XMonad.Util.EZConfig           -- "M-S-x" style keybindings
 
@@ -28,6 +31,9 @@ import qualified XMonad.Actions.DynamicWorkspaceOrder as DO
 import XMonad.Actions.DynamicWorkspaceGroups
 
 import XMonad.Actions.GridSelect
+
+import XMonad.Util.WindowProperties
+import XMonad.Util.NamedWindows (getName)
 
 -- Prompts ---------------------------------------------------
 import XMonad.Prompt
@@ -304,7 +310,8 @@ main = do
 -- fields in the default config. Any you don't override, will
 -- use the defaults defined in xmonad/XMonad/Config.hs
 --
-defaults h r = myUrgencyHook (xRes r) (yRes r) $ defaultConfig {
+-- defaults h r = myUrgencyHook (xRes r) (yRes r) $ defaultConfig {
+defaults h r = withUrgencyHook LibNotifyUrgencyHook defaultConfig {
       -- simple stuff
         terminal           = myTerminal,
         focusFollowsMouse  = myFocusFollowsMouse,
@@ -322,17 +329,15 @@ defaults h r = myUrgencyHook (xRes r) (yRes r) $ defaultConfig {
         startupHook        = myStartupHook
     } `additionalKeysP` ( myKeymap $ defaults h r )
 
-myUrgencyHook width height = withUrgencyHook dzenUrgencyHook
-    { args =
-        [
-            "-bg", "yellow",
-            "-fg", "black",
-            "-fn", "-efont-biwidth-bold-r-*-*-24-*-*-*-*-*-iso10646-1",
-            "-y", show (height - ( 24 + 2 )), -- lowest border minus window ht. (font px size + 2 px border)
-            "-ta", "c",
-            "-w", show width
-        ]
-    }
+data LibNotifyUrgencyHook = LibNotifyUrgencyHook deriving (Read, Show)
+ 
+instance UrgencyHook LibNotifyUrgencyHook where
+    urgencyHook LibNotifyUrgencyHook w = do
+        name <- getName w
+        ws <- gets windowset
+        whenJust (W.findTag w ws) (flash name)
+      where flash name index =
+                safeSpawn "notify-send" [(show name ++ " requests your attention on workspace " ++ index)]
 
 -- Gets the current resolution given a display and a screen
 getScreenRes :: String -> Int -> IO Res
