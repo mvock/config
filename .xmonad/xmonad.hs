@@ -246,7 +246,7 @@ myKeymap conf =
       -- add single lines to my todo file from a prompt.
       ("M-w t", appendFilePrompt myXPConfig "/home/markus/todo")
       -- add single lines to my wiki Notes file from a prompt.
-    , ("M-w n", appendFilePrompt myXPConfig "/home/markus/projekte/wiki/Markus/Notizen.mdwn")
+    , ("M-w n", appendFilePrompt myXPConfig "/home/markus/Notizen.mdwn")
     , ("M-p", runOrRaisePrompt myXPConfig)
     ]
     ++
