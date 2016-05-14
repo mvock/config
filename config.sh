@@ -1,60 +1,65 @@
-#!/bin/bash
-### zsh ###
-if [ -f ~/.zshrc ];
-then
-   mv ~/.zshrc ~/.zshrc.bak
-   echo "moved old .zshrc to .zshrc.bak"
-fi
+#!/bin/zsh
 
-ln -s ~/.florres/.zshrc ~/.zshrc
+here="$(dirname "$(readlink -f $0)")"
+there="$HOME"
 
-if [ -d ~/.zsh ];
-then
-   mv ~/.zsh ~/.zsh.bak
-   echo "moved folder .zsh to .zsh.bak"
-fi
+function create() {
+    install-$1
+}
 
-mkdir ~/.zsh
-mkdir ~/.zsh/antigen
+function install-zsh() {
+    backup-and-link ".zshrc"
+    backup "$there/.zsh"
 
-curl -L https://raw.githubusercontent.com/zsh-users/antigen/master/antigen.zsh > ~/.zsh/antigen/antigen.zsh
+    mkdir -p ~/.zsh/antigen
+    curl -L https://raw.githubusercontent.com/zsh-users/antigen/master/antigen.zsh > ~/.zsh/antigen/antigen.zsh
+}
 
-### vim ###
-if [ -f ~/.vimrc ];
-then
-   mv ~/.vimrc ~/.vimrc.bak
-   echo "moved old .vimrc to .vimrc.bak"
-fi
+function install-vim() {
+    backup-and-link ".vimrc"
+    backup-and-link ".vim"
+    git clone https://github.com/VundleVim/Vundle.vim.git "$there/.vim/bundle/Vundle.vim"
+    backup-and-link ".gvimrc"
 
-ln -s ~/.florres/.vimrc ~/.vimrc
+    vim -c ":PluginInstall" -c ":quit" 
+}
 
-if [ -d ~/.vimfiles ];
-then
-   mv ~/.vimfiles ~/.vimfiles.bak
-   echo "moved folder .vimfiles to .vimfiles.bak"
-fi
+function backup-and-link() {
+    link="$there/$1"
+    backup $link
 
-ln -s ~/.florres/vimfiles ~/.vimfiles
+    target="$here/$1"
 
-if [ -d ~/.florres/vimfiles/bundle/Vundle.vim ];
-then
-    cd ~/.florres/vimfiles/bundle/Vundle.vim 
-    git pull -r
-else
-    git clone https://github.com/VundleVim/Vundle.vim.git ~/.florres/vimfiles/bundle/Vundle.vim
-fi
+    ln -s "$target" "$link"
+}
 
-### gvim ###
-if [ -f ~/.gvimrc ];
-then
-   mv ~/.gvimrc ~/.gvimrc.bak
-   echo "moved old .gvimrc to .gvimrc.bak"
-fi
-ln -s ~/.florres/.gvimrc ~/.gvimrc
-cat << EOF
-************************************
-** To finish installation execute **
-** :PluginInstall                 **
-** in vim                         **
-************************************
-EOF
+function backup() {
+    old="$1"
+    backup="${old}~"
+
+    echo -n "Checking whether $old needs to be backed up... "
+    if [ -e $old ]; then
+        mv $old $backup
+        echo "Yes, moved old $old to $backup"
+    else
+        echo "No."
+    fi
+}
+
+create zsh
+create vim
+
+#### gvim ###
+#if [ -f ~/.gvimrc ];
+#then
+#   mv ~/.gvimrc ~/.gvimrc.bak
+#   echo "moved old .gvimrc to .gvimrc.bak"
+#fi
+#ln -s ~/.florres/.gvimrc ~/.gvimrc
+#cat << EOF
+#************************************
+#** To finish installation execute **
+#** :PluginInstall                 **
+#** in vim                         **
+#************************************
+#EOF

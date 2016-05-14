@@ -22,7 +22,7 @@ export DISPLAY=:0
 ###############################################
 
 # Load Antigen
-source ~/.zsh/antigen.zsh
+source ~/.zsh/antigen/antigen.zsh
 
 # Load various lib files
 # antigen bundle robbyrussell/oh-my-zsh lib/

@@ -19,7 +19,7 @@ filetype off
 "------------------------------------------------------------
 " Vundle {{{1
 "
-set rtp+=~/.vimfiles/bundle/Vundle.vim
+set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 "'~/.vimfiles/bundle')
 " alternatively, pass a path where Vundle should install plugins
@@ -28,7 +28,7 @@ call vundle#begin()
 " let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
 
-source ~/.vimfiles/plugins.vim
+source ~/.vim/plugins.vim
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -45,7 +45,7 @@ filetype indent plugin on
 syntax on
  
 " Add author information
-"source ~/.vimfiles/author.vim
+"source ~/.vim/author.vim
  
 "------------------------------------------------------------
 " Must have options {{{1
@@ -195,5 +195,5 @@ set guifont=Source_Code_Pro:h12
 set backupdir-=.
 set backupdir^=$TEMP
 
-source ~/.vimfiles/plugins/signature/signature.vim
-"source ~/.vimfiles/logging-config.vim
+"source ~/.vim/plugins/signature/signature.vim
+"source ~/.vim/logging-config.vim
