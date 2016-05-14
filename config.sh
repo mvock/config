@@ -21,7 +21,7 @@ function install-vim() {
     git clone https://github.com/VundleVim/Vundle.vim.git "$there/.vim/bundle/Vundle.vim"
     backup-and-link ".gvimrc"
 
-    vim -c ":PluginInstall" -c ":quit" 
+    vim -c ":PluginInstall"
 }
 
 function backup-and-link() {
