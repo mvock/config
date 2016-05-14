@@ -17,7 +17,7 @@ import XMonad.Util.EZConfig           -- "M-S-x" style keybindings
 import XMonad.Hooks.DynamicLog        -- Allows for xmobar integration
 import XMonad.Hooks.ManageDocks       -- For leaving space for xmobar
 
-import XMonad.Hooks.ManageHelpers     -- ??
+import XMonad.Hooks.ManageHelpers     -- http://xmonad.org/xmonad-docs/xmonad-contrib/XMonad-Hooks-ManageHelpers.html
 
 import XMonad.Hooks.UrgencyHook       -- For Urgency hint management
 
@@ -114,6 +114,7 @@ myLayout =     avoidStrutsOn [U] $
 --
 myManageHook = composeAll
     [
+        isDialog                      --> doShift =<< currentWs,
         className =? "MPlayer"        --> doFloat,
         className =? "Pidgin"         --> doShift "talk",
         className =? "Icedove"        --> doShift "mail",
@@ -122,6 +123,7 @@ myManageHook = composeAll
         className =? "VirtualBox"     --> doShift "virtual",
         resource  =? "desktop_window" --> doIgnore,
         resource  =? "kdesktop"       --> doIgnore,
+        isDialog                      --> doCenterFloat,
         manageDocks
     ]
 
@@ -151,7 +153,7 @@ myLogHook h = dynamicLogWithPP $ xmobarPP {
         ppVisible = pad . wrap "›" "",
         ppHidden = const "",
         ppUrgent = xmobarColor "darkgreen" "green" . pad,
-        ppTitle = xmobarColor "green" "" . shorten 80
+        ppTitle = xmobarColor "green" "" . shorten 77
     }
 
 ------------------------------------------------------------------------
