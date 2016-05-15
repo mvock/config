@@ -68,7 +68,7 @@ elif [[ $CURRENT_OS == 'Cygwin' ]]; then
     antigen bundle cygwin
 fi
 
-antigen bundle ~/projekte/version-tools/extract-changelog --no-local-clone
+#antigen bundle ~/projekte/version-tools/extract-changelog --no-local-clone
 
 #
 # Antigen Theme
