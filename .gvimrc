@@ -3,7 +3,7 @@
 set guioptions-=m " Remove menu
 set guioptions-=T " Remove Toolbar
 
-set guifont=Anonymous\ Pro\ 12
+set guifont=Source\ Code\ Pro\ Medium\ 12
 
-nnoremap <Leader>p :set guifont=Anonymous\ Pro\ 24
-nnoremap <Leader>P :set guifont=Anonymous\ Pro\ 12
+nnoremap <Leader>p :set guifont=Source\ Code\ Pro\ Medium\ 24
+nnoremap <Leader>P :set guifont=Source\ Code\ Pro\ Medium\ 12
