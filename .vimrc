@@ -153,6 +153,9 @@ set notimeout ttimeout ttimeoutlen=200
 " Use <F11> to toggle between 'paste' and 'nopaste'
 set pastetoggle=<F11>
 
+" Show non-printing characters
+set list
+set listchars=eol:¶,tab:⇥\ ,trail:•,extends:»,precedes:«,conceal:…,nbsp:⍽
 
 "------------------------------------------------------------
 " Indentation options {{{1
@@ -161,14 +164,15 @@ set pastetoggle=<F11>
 
 " Indentation settings for using 4 spaces instead of tabs.
 " Do not change 'tabstop' from its default value of 8 with this setup.
+set smartindent
 set shiftwidth=4
 set softtabstop=4
 set expandtab
 
 " Indentation settings for using hard tabs for indent. Display tabs as
 " four characters wide.
-"set shiftwidth=4
-"set tabstop=4
+set shiftwidth=4
+set tabstop=4
 
 
 "------------------------------------------------------------
@@ -186,14 +190,21 @@ nnoremap <C-L> :nohl<CR><C-L>
 
 " Map <Leader>ev to edit vimrc file
 nnoremap <Leader>ev :tabnew $MYVIMRC<CR>
+nnoremap <Leader>eg :tabnew $MYGVIMRC<CR>
 
 "------------------------------------------------------------
 " Visuals
 colorscheme pablo
-set guifont=Source_Code_Pro:h12
 
+"------------------------------------------------------------
 set backupdir-=.
 set backupdir^=$TEMP
 
+"------------------------------------------------------------
 "source ~/.vim/plugins/signature/signature.vim
 "source ~/.vim/logging-config.vim
+
+"------------------------------------------------------------
+" detect .gradle files as groovy and .md as markdown
+au BufNewFile,BufRead *.gradle set filetype=groovy
+au BufNewFile,BufRead *.md set filetype=markdown
