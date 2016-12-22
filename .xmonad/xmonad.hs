@@ -52,9 +52,7 @@ import LibNotifyUrgencyHook
 --
 myTerminal  = "urxvt"
 myShell     = "zsh"
-browserCmd  = "conkeror"
-mailCmd     = "icedove"
-gnucash     = "gnucash"
+browserCmd  = "firefox"
 
 -- Whether focus follows the mouse pointer.
 myFocusFollowsMouse :: Bool
@@ -176,10 +174,6 @@ myTopics =
   [ "dashboard" -- the first one
   , "dev"
   , "web", "mail", "talk", "music", "dokumente"
-  , "cash"
-  , "sailfish"
-  , "games"
-  , "virtual"
   ]
 
 myTopicConfig :: TopicConfig
@@ -188,10 +182,6 @@ myTopicConfig = defaultTopicConfig
       [ ("dashboard", "")
       , ("dev", "")
       , ("dokumente", "Dokumente")
-      , ("cash", "")
-      , ("sailfish", "projekte")
-      , ("games", "")
-      , ("virtual", "VirtualBox VMs")
       ]
   , defaultTopicAction = const (return ())
   , defaultTopic = "dashboard"
@@ -199,9 +189,6 @@ myTopicConfig = defaultTopicConfig
       [ ("dashboard",  spawnShell)
       , ("dev",        spawnShell >> spawn "gvim")
       , ("web",        spawn browserCmd)
-      , ("mail",       spawn mailCmd)
-      , ("cash",       spawn gnucash)
-      , ("virtual",    spawn "virtualbox")
       ]
   }
 
