@@ -21,9 +21,11 @@ setxkbmap de neo
 
 ~/.screenlayout/default
 
-trayer --edge top --align left --SetDockType true --SetPartialStrut false --expand true --width 5 --height 22 --transparent true --tint 0x000000 --alpha 50 --monitor 1 &
+trayer --edge top --align left --SetDockType true --SetPartialStrut false --expand true --width 5 --height 22 --transparent true --tint 0x000000 --alpha 100 --monitor 0 &
 
 xcompmgr &
+feh --bg-scale -z ~/Bilder/wallpapers/
+
 pidgin &
 
 exec xmonad
