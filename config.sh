@@ -3,26 +3,29 @@
 here="$(dirname "$(readlink -f $0)")"
 there="$HOME"
 
+typeset -A files
+files_vim=(.vimrc .vim .gvimrc)
+files_zsh=(.zshrc)
+files_x=(.xmobarrc .Xresources .xsession .xmonad)
+
 function create() {
+	files="files_$1"
+	for file in ${(P)files}; do
+		backup-and-link "$file";
+	done
+
     install-$1
 }
 
 function install-zsh() {
-    backup-and-link ".zshrc"
     backup "$there/.zsh"
-
     mkdir -p ~/.zsh/antigen
-    curl -L https://raw.githubusercontent.com/zsh-users/antigen/master/antigen.zsh > ~/.zsh/antigen/antigen.zsh
+    curl -L https://raw.githubusercontent.com/zsh-users/antigen/master/bin/antigen.zsh > ~/.zsh/antigen/antigen.zsh
 }
 
-function install-vim() {
-    backup-and-link ".vimrc"
-    backup-and-link ".vim"
-    git clone https://github.com/VundleVim/Vundle.vim.git "$there/.vim/bundle/Vundle.vim"
-    backup-and-link ".gvimrc"
+function install-vim() { }
 
-    vim -c ":PluginInstall"
-}
+function install-x() { }
 
 function backup-and-link() {
     link="$there/$1"
@@ -48,18 +51,4 @@ function backup() {
 
 create zsh
 create vim
-
-#### gvim ###
-#if [ -f ~/.gvimrc ];
-#then
-#   mv ~/.gvimrc ~/.gvimrc.bak
-#   echo "moved old .gvimrc to .gvimrc.bak"
-#fi
-#ln -s ~/.florres/.gvimrc ~/.gvimrc
-#cat << EOF
-#************************************
-#** To finish installation execute **
-#** :PluginInstall                 **
-#** in vim                         **
-#************************************
-#EOF
+create x
