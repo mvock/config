@@ -6,9 +6,9 @@ setopt autocd extendedglob
 bindkey -e
 # End of lines configured by zsh-newuser-install
 # The following lines were added by compinstall
-zstyle :compinstall filename '/home/mvock/.zshrc'
+zstyle :compinstall filename '~/.zshrc'
 
-autoload -Uz compinit
+autoload -Uz compinit zmv
 compinit
 # End of lines added by compinstall
 
@@ -53,21 +53,6 @@ EOBUNDLES
 # antigen bundle ssh-agent
 
 # OS specific plugins
-if [[ $CURRENT_OS == 'OS X' ]]; then
-    antigen bundle brew
-    antigen bundle brew-cask
-    antigen bundle gem
-    antigen bundle osx
-elif [[ $CURRENT_OS == 'Linux' ]]; then
-    # None so far...
-
-    if [[ $DISTRO == 'CentOS' ]]; then
-        antigen bundle centos
-    fi
-elif [[ $CURRENT_OS == 'Cygwin' ]]; then
-    antigen bundle cygwin
-fi
-
 #antigen bundle ~/projekte/version-tools/extract-changelog --no-local-clone
 
 #
