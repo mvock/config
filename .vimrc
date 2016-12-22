@@ -22,7 +22,6 @@ filetype off
 "
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
-"'~/.vimfiles/bundle')
 " alternatively, pass a path where Vundle should install plugins
 "call vundle#begin('~/some/path/here')
 
