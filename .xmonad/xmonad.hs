@@ -13,13 +13,12 @@ import qualified Data.Map        as M
 import XMonad.Util.Run
 import XMonad.Util.EZConfig           -- "M-S-x" style keybindings
 
+import XMonad.Hooks.UrgencyHook       -- For Urgency hint management
 
 import XMonad.Hooks.DynamicLog        -- Allows for xmobar integration
 import XMonad.Hooks.ManageDocks       -- For leaving space for xmobar
 
 import XMonad.Hooks.ManageHelpers     -- http://xmonad.org/xmonad-docs/xmonad-contrib/XMonad-Hooks-ManageHelpers.html
-
-import XMonad.Hooks.UrgencyHook       -- For Urgency hint management
 
 import Graphics.X11.Xinerama          -- For getting screen info
 
@@ -33,13 +32,20 @@ import XMonad.Actions.DynamicWorkspaceGroups
 import XMonad.Actions.GridSelect
 
 import XMonad.Util.WindowProperties
-import XMonad.Util.NamedWindows (getName)
+
+-- Layouts ---------------------------------------------------
+import XMonad.Layout.LayoutHints
+import XMonad.Layout.Tabbed
+import XMonad.Layout.Renamed
 
 -- Prompts ---------------------------------------------------
 import XMonad.Prompt
 import XMonad.Prompt.Workspace
 import XMonad.Prompt.RunOrRaise
 import XMonad.Prompt.AppendFile       -- append stuff to my todo file
+
+-- Local libs ------------------------------------------------
+import LibNotifyUrgencyHook
 
 -- The preferred terminal program, which is used in a binding below and by
 -- certain contrib modules.
@@ -56,7 +62,7 @@ myFocusFollowsMouse = True
 
 -- Width of the window border in pixels.
 --
-myBorderWidth   = 2
+myBorderWidth   = 3
 
 -- modMask lets you specify which modkey you want to use. The default
 -- is mod1Mask ("left alt").  You may also consider using mod3Mask
@@ -83,19 +89,12 @@ myFocusedBorderColor = "#00ff00"
 -- which denotes layout choice.
 --
 myLayout =     avoidStrutsOn [U] $
-    tiled ||| Mirror tiled ||| Full
+    renamed [CutWordsLeft 1] . layoutHints $ tiled ||| Mirror tiled ||| renamed [Replace "Full"] simpleTabbed
         where
-            -- default tiling algorithm partitions the screen into two panes
-            tiled   = Tall nmaster delta ratio
-
-            -- The default number of windows in the master pane
+            tiled   = renamed [Replace "Tiled"] $ Tall nmaster delta ratio
             nmaster = 1
-
-            -- Default proportion of screen occupied by master pane
-            ratio   = 2/3
-
-            -- Percent of screen to increment by when resizing panes
             delta   = 3/100
+            ratio   = 2/3
 
 ------------------------------------------------------------------------
 -- Window rules:
@@ -119,11 +118,8 @@ myManageHook = composeAll
         className =? "Pidgin"         --> doShift "talk",
         className =? "Icedove"        --> doShift "mail",
         className =? "Conkeror"       --> doShift "web",
-        className =? "QtCreator"      --> doShift "sailfish",
-        className =? "VirtualBox"     --> doShift "virtual",
         resource  =? "desktop_window" --> doIgnore,
         resource  =? "kdesktop"       --> doIgnore,
-        isDialog                      --> doCenterFloat,
         manageDocks
     ]
 
@@ -149,11 +145,11 @@ myEventHook = mempty
 --
 myLogHook h = dynamicLogWithPP $ xmobarPP {
         ppOutput = hPutStrLn h,
-        ppCurrent = pad . xmobarColor "green" "" . wrap "→" "",
-        ppVisible = pad . wrap "›" "",
+        ppCurrent = pad . xmobarColor "green" "" . wrap "λx." "",
+        ppVisible = pad,
         ppHidden = const "",
         ppUrgent = xmobarColor "darkgreen" "green" . pad,
-        ppTitle = xmobarColor "green" "" . shorten 77
+        ppTitle = xmobarColor "green" "" . shorten 256
     }
 
 ------------------------------------------------------------------------
@@ -178,7 +174,7 @@ myStartupHook = return ()
 myTopics :: [Topic]
 myTopics =
   [ "dashboard" -- the first one
-  , "proggen"
+  , "dev"
   , "web", "mail", "talk", "music", "dokumente"
   , "cash"
   , "sailfish"
@@ -189,9 +185,8 @@ myTopics =
 myTopicConfig :: TopicConfig
 myTopicConfig = defaultTopicConfig
   { topicDirs = M.fromList $
-      [ ("dashboard", "Desktop")
-      , ("proggen", "projekte")
-      , ("talk", "")
+      [ ("dashboard", "")
+      , ("dev", "")
       , ("dokumente", "Dokumente")
       , ("cash", "")
       , ("sailfish", "projekte")
@@ -202,7 +197,7 @@ myTopicConfig = defaultTopicConfig
   , defaultTopic = "dashboard"
   , topicActions = M.fromList $
       [ ("dashboard",  spawnShell)
-      , ("proggen",    spawnShell >> spawn "gvim")
+      , ("dev",        spawnShell >> spawn "gvim")
       , ("web",        spawn browserCmd)
       , ("mail",       spawn mailCmd)
       , ("cash",       spawn gnucash)
@@ -228,13 +223,13 @@ myKeymap conf =
     , ("M-g", promptedGoto)
     , ("M-C-g", promptedGotoOtherScreen)
     , ("M-S-g", promptedShift)
-    , ("M-u", focusUrgent)
+    , ("M-S-u", focusUrgent)
     ]
     ++
     -- rotate workspaces.
     [ ("M-C-<R>",   DO.swapWith Next NonEmptyWS)
     , ("M-C-<L>",   DO.swapWith Prev NonEmptyWS)
-    , ("M-S-<Tab>", cycleRecentWS' [xK_Super_L, xK_Shift_L] xK_Tab xK_x)
+    , ("M-c", cycleRecentWS' [xK_Super_L] xK_c xK_x)
     ]
     ++
     -- workspace groups.
@@ -252,9 +247,10 @@ myKeymap conf =
     , ("M-p", runOrRaisePrompt myXPConfig)
     ]
     ++
-    [
-      ("M-x", prevScreen)
-    , ("M-v", nextScreen)
+    [ ( mask ++ [key], screenWorkspace s >>= flip whenJust (windows . action) )
+           | (key, s) <- zip "xv" [0..]
+           , (mask, action) <- [ ("M-", W.view)
+                             , ("M-S-", W.shift) ]
     ]
     ++
     -- utilities.
@@ -262,6 +258,11 @@ myKeymap conf =
       ("<Print>", spawn "scrot")
     , ("C-<Print>", spawn "sleep 0.2; scrot -s")
     , ("M-S-z", spawn "xscreensaver-command -lock")
+    ]
+    ++
+    [
+      ("M-u", spawn "setxkbmap de")
+    , ("M-a", spawn "setxkbmap de neo")
     ]
 
 
@@ -331,16 +332,6 @@ defaults h r = withUrgencyHook LibNotifyUrgencyHook defaultConfig {
         startupHook        = myStartupHook
     } `additionalKeysP` ( myKeymap $ defaults h r )
 
-data LibNotifyUrgencyHook = LibNotifyUrgencyHook deriving (Read, Show)
- 
-instance UrgencyHook LibNotifyUrgencyHook where
-    urgencyHook LibNotifyUrgencyHook w = do
-        name <- getName w
-        ws <- gets windowset
-        whenJust (W.findTag w ws) (flash name)
-      where flash name index =
-                safeSpawn "notify-send" [(show name ++ " requests your attention on workspace " ++ index)]
-
 -- Gets the current resolution given a display and a screen
 getScreenRes :: String -> Int -> IO Res
 getScreenRes d n = do
@@ -372,14 +363,15 @@ gsConfig = defaultGSConfig { gs_navigate = fix $ \self ->
                 ,((0, xK_slash ), substringSearch self)]
            ++
             map (\(k,a) -> (k,a >> self))
-                [((0, xK_Left)     , move (-1,  0))
+                [((0, xK_Left)         , move (-1,  0))
                 ,((mod3Mask , xK_Left) , move (-1,  0))
-                ,((0, xK_Right)    , move ( 1,  0))
+                ,((0, xK_Right)        , move ( 1,  0))
                 ,((mod3Mask, xK_Right) , move ( 1,  0))
-                ,((0, xK_Down)     , move ( 0,  1))
-                ,((mod3Mask, xK_Down) , move ( 0,  1))
-                ,((0, xK_Up)       , move ( 0, -1))
-                ,((mod3Mask, xK_Up) , move ( 0, -1))
-                ,((0, xK_space)    , setPos (0,0))
+                ,((0, xK_Down)         , move ( 0,  1))
+                ,((mod3Mask, xK_Down)  , move ( 0,  1))
+                ,((0, xK_Up)           , move ( 0, -1))
+                ,((mod3Mask, xK_Up)    , move ( 0, -1))
+                ,((0, xK_space)        , setPos (0,0))
                 ]
-    in makeXEventhandler $ shadowWithKeymap navKeyMap (const self) }
+    in makeXEventhandler $ shadowWithKeymap navKeyMap (const self)
+    , gs_cellpadding = 10 }
