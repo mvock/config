@@ -12,7 +12,7 @@ function install-zsh() {
     backup "$there/.zsh"
 
     mkdir -p ~/.zsh/antigen
-    curl -L https://raw.githubusercontent.com/zsh-users/antigen/master/antigen.zsh > ~/.zsh/antigen/antigen.zsh
+    curl -L https://raw.githubusercontent.com/zsh-users/antigen/master/bin/antigen.zsh > ~/.zsh/antigen/antigen.zsh
 }
 
 function install-vim() {
