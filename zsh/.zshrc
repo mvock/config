@@ -71,15 +71,12 @@ antigen apply
 
 alias rm='rm -I'
 
-# Add current working directory to homedirs
-HOMEDIRS=~/.zsh/homedirs.zsh
-function add-to-homedirs () {
-    cmd="hash -d "$1"="'"'`pwd`'"'
-    echo $cmd >> $HOMEDIRS
-    eval $cmd
-}
+MARKPATH=~/.marks
 
-. $HOMEDIRS
+# Hash all links in $MARKPATH
+for link ($MARKPATH/*(N@)) {
+    hash -d -- _${link:t}=${link:A}
+}
 
 # Add last command line to aliases
 ALIASES=~/.zsh/aliases.zsh
