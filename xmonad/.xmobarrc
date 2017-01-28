@@ -7,14 +7,14 @@ Config { font = "xft:Source\ Code\ Pro\ Regular:pixelsize=14"
          , Run Memory ["-p", "3", "-t","M: <usedratio>%"] 10
          , Run Swap ["-p", "3", "-t", "S: <usedratio>%"] 10
          , Run Date "%a %b %_d %H:%M" "date" 10
-         , Run BatteryP ["BAT0"]
+         , Run Battery
                         ["-t", "<acstatus>",
                          "-L", "10", "-H", "80", "-p", "3",
                          "--", "-O", "| <fc=green><timeleft></fc>", "-o", "| <fc=red><timeleft></fc>",
                          "-i", "",
                          "-L", "-15", "-H", "-5",
                          "-l", "red", "-m", "blue", "-h", "green"]
-                         600
+                         10
          , Run StdinReader
          ]
        , sepChar = "%"
