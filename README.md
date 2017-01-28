@@ -1,8 +1,4 @@
 # My config repo
 Linux configurations
 
-## TODO
-* mv structure to .conf
-* add delete script
-* add ls aliases
-* evaluate jinja -> templates for gitconfig
+To install configurations, use xstow or stow
