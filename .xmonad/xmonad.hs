@@ -53,6 +53,7 @@ import LibNotifyUrgencyHook
 myTerminal  = "urxvt"
 myShell     = "zsh"
 browserCmd  = "firefox"
+keepassCmd  = "keepass2"
 
 -- Whether focus follows the mouse pointer.
 myFocusFollowsMouse :: Bool
@@ -174,6 +175,7 @@ myTopics =
   [ "dashboard" -- the first one
   , "dev"
   , "web", "mail", "talk", "music", "dokumente"
+  , "keepass"
   ]
 
 myTopicConfig :: TopicConfig
@@ -189,6 +191,7 @@ myTopicConfig = defaultTopicConfig
       [ ("dashboard",  spawnShell)
       , ("dev",        spawnShell >> spawn "gvim")
       , ("web",        spawn browserCmd)
+      , ("keepass",    spawn keepassCmd)
       ]
   }
 

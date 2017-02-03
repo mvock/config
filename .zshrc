@@ -70,6 +70,9 @@ antigen apply
 # My own aliases
 
 alias rm='rm -I'
+alias j7='JAVA_HOME="/usr/lib/jvm/jdk1.7"'
+alias ':q'='exit'
+unalias ag # needed for ag (silver searcher)
 
 # Add current working directory to homedirs
 HOMEDIRS=~/.zsh/homedirs.zsh
