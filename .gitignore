@@ -1,5 +1,3 @@
-.vim/bundle
-.vim/.netrwhist
-.xmonad/
-!.xmonad/lib
-!.xmonad/xmonad.hs
+xmonad/.xmonad
+!xmonad/.xmonad/xmonad.hs
+!xmonad/.xmonad/lib
