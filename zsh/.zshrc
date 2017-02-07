@@ -72,17 +72,13 @@ antigen apply
 alias rm='rm -I'
 alias j7='JAVA_HOME="/usr/lib/jvm/jdk1.7"'
 alias ':q'='exit'
-unalias ag # needed for ag (silver searcher)
 
-# Add current working directory to homedirs
-HOMEDIRS=~/.zsh/homedirs.zsh
-function add-to-homedirs () {
-    cmd="hash -d "$1"="'"'`pwd`'"'
-    echo $cmd >> $HOMEDIRS
-    eval $cmd
+MARKPATH=~/.marks
+
+# Hash all links in $MARKPATH
+for link ($MARKPATH/*(N@)) {
+    hash -d -- _${link:t}=${link:A}
 }
-
-. $HOMEDIRS
 
 # Add last command line to aliases
 ALIASES=~/.zsh/aliases.zsh
