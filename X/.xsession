@@ -22,7 +22,6 @@ setxkbmap de neo
 trayer --edge top --align left --SetDockType true --SetPartialStrut false --expand true --width 10 --height 20 --monitor 0 --transparent true --tint 0x000000 --alpha 0 &
 
 xcompmgr &
-feh --bg-scale -z ~/Bilder/wallpapers/
 
 # pidgin &
 
