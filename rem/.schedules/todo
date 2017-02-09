@@ -1,2 +1,11 @@
-REM MSG Zeiten schreiben
-REM MSG Know-How-Transfer: Ressourcen verlinken?
+FSET todo() trigger(realtoday())
+FSET float(y,m,d) trigger(MAX(realtoday(), date(y,m,d)))
+FSET due(y,m,d) "(" + (date(y,m,d)-trigdate()) + ")"
+
+REM [todo()] PRIORITY 0 MSG Zeiten schreiben
+REM [todo()] PRIORITY 10 MSG %"Termin KHT%" mit Marina abklären
+REM [todo()] PRIORITY 30 MSG Know-How-Transfer: %"Ressourcen verlinken%"?
+REM [todo()] PRIORITY 40 MSG Sonar-Analyse auch für MiSes
+REM [todo()] PRIORITY 50 MSG Docker save
+REM [todo()] PRIORITY 60 MSG %"Doku Selenium%" zu „Wann API erweitern, worauf achten“ → Chr. Hafner
+REM [todo()] PRIORITY 70 MSG %"VM: „Nested Paging aktivieren“%" deaktivieren
